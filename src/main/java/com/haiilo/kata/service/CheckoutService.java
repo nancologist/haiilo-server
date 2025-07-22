@@ -16,7 +16,6 @@ public class CheckoutService {
 
     private final ItemRepository itemRepository;
 
-    // Todo: Add some UTs for this
     public double calculateSum(List<CartItem> cart) {
 
         return cart.stream().mapToDouble((cartItem) -> {
