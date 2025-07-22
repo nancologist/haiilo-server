@@ -1,5 +1,6 @@
 package com.haiilo.kata.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,5 +23,6 @@ public class Offer {
     @OneToOne
     @MapsId
     @JoinColumn(name = "item_id")
+    @JsonBackReference
     private Item item;
 }

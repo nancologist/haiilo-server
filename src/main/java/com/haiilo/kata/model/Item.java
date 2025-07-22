@@ -1,5 +1,6 @@
 package com.haiilo.kata.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,5 +22,6 @@ public class Item {
     private double price;
 
     @OneToOne(mappedBy = "item")
+    @JsonManagedReference
     private Offer offer;
 }
