@@ -4,19 +4,17 @@ import com.haiilo.kata.dto.CartItem;
 import com.haiilo.kata.model.Item;
 import com.haiilo.kata.model.Offer;
 import com.haiilo.kata.repository.ItemRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class CheckoutService {
 
     private final ItemRepository itemRepository;
-
-    public CheckoutService(ItemRepository itemRepository) {
-        this.itemRepository = itemRepository;
-    }
 
     // Todo: Add some UTs for this
     public double calculateSum(List<CartItem> cart) {
@@ -25,18 +23,21 @@ public class CheckoutService {
             Long itemId = cartItem.getItemId();
             int quantity = cartItem.getQuantity();
 
-            Optional<Item> item = itemRepository.findById(itemId);
+            Optional<Item> optionalItem = itemRepository.findById(itemId);
 
-            if (item.isPresent()) {
-                double itemSum;
-                if (item.get().getOffer() != null) {
-                    itemSum = calculateItemSumWithOffer(item.get(), quantity);
-                } else {
-                    itemSum = item.get().getPrice() * quantity;
-                }
-                return itemSum;
+            if (optionalItem.isEmpty()) {
+                throw new RuntimeException("Item not found with ID: " + cartItem.getItemId());
             }
-            return 0;
+
+            Item item = optionalItem.get();
+
+            double itemSum;
+            if (item.getOffer() != null) {
+                itemSum = calculateItemSumWithOffer(item, quantity);
+            } else {
+                itemSum = item.getPrice() * quantity;
+            }
+            return itemSum;
         }).sum();
     }
 
