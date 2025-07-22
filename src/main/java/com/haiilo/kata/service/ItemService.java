@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -16,6 +17,10 @@ public class ItemService {
 
     private final ItemRepository itemRepository;
     private final OfferRepository offerRepository;
+
+    public List<Item> findAll() {
+        return this.itemRepository.findAll();
+    }
 
     @Transactional
     public Item updatePrice(Long id, ItemPatchDto patchDto) {

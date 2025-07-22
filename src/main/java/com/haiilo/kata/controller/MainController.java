@@ -11,7 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-// Todo: consider creating dedicated controllers for each domain if amount of endpoints grow.
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 public class MainController {
@@ -19,15 +20,21 @@ public class MainController {
     private final CheckoutService checkoutService;
     private final ItemService itemService;
 
+    @PatchMapping("/items/{id}")
+    public ResponseEntity<Item> patchItem(@PathVariable Long id, @Valid @RequestBody ItemPatchDto patchDto) {
+        Item updatedItem = this.itemService.updatePrice(id, patchDto);
+        return ResponseEntity.ok(updatedItem);
+    }
+
+    @GetMapping("/items")
+    public ResponseEntity<List<Item>> getItems() {
+        List<Item> items = this.itemService.findAll();
+        return ResponseEntity.ok(items);
+    }
+
     @PostMapping("/checkout")
     public ResponseEntity<CheckoutResponse> checkoutItems(@Valid @RequestBody CheckoutRequest request) {
         double sum = checkoutService.calculateSum(request.getCart());
         return ResponseEntity.ok(new CheckoutResponse(sum));
-    }
-
-    @PatchMapping("/item/{id}")
-    public ResponseEntity<Item> patchItem(@PathVariable Long id, @Valid @RequestBody ItemPatchDto patchDto) {
-        Item updatedItem = this.itemService.updatePrice(id, patchDto);
-        return ResponseEntity.ok(updatedItem);
     }
 }

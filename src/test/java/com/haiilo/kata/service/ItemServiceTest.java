@@ -14,6 +14,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.Mockito.*;
@@ -100,5 +102,14 @@ public class ItemServiceTest {
         Assertions.assertNotNull(updatedItem.getOffer());
         verify(itemRepository, times(1)).findById(1L);
         verify(offerRepository, never()).deleteById(1L);
+    }
+
+    @DisplayName("Should find all items")
+    @Test
+    public void shouldFindAllItems() {
+        when(itemRepository.findAll()).thenReturn(Arrays.asList(orange, apple));
+        List<Item> items = itemService.findAll();
+        Assertions.assertEquals(2, items.size());
+        verify(itemRepository, times(1)).findAll();
     }
 }
