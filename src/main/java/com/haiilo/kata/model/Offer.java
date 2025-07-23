@@ -1,6 +1,7 @@
 package com.haiilo.kata.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,6 +13,7 @@ import lombok.Setter;
 public class Offer {
 
     @Id
+    @JsonIgnore
     private Long itemId;
 
     @Column(nullable = false)
