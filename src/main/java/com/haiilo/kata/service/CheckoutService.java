@@ -53,7 +53,7 @@ public class CheckoutService {
         int remained = quantity;
         Offer minOffer = applicableDescSortedOffers.getLast();
 
-        while(remained >= minOffer.getQuantity() && index < applicableDescSortedOffers.size()) {
+        while(remained >= applicableDescSortedOffers.get(index).getQuantity() && index < applicableDescSortedOffers.size()) {
             Offer currentOffer = applicableDescSortedOffers.get(index);
             int offerCount = quantity / currentOffer.getQuantity();
             sum += offerCount * currentOffer.getPrice();
