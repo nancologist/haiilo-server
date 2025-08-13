@@ -21,7 +21,7 @@ public class Item {
     @Column(nullable = false)
     private double price;
 
-    @OneToOne(mappedBy = "item")
+    @OneToMany
     @JsonManagedReference
-    private Offer offer;
+    private Offer[] offers;
 }

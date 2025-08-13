@@ -22,7 +22,7 @@ public class Offer {
     @Column(nullable = false)
     private double price;
 
-    @OneToOne
+    @ManyToOne
     @MapsId
     @JoinColumn(name = "item_id")
     @JsonBackReference

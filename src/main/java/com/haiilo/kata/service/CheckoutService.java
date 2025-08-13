@@ -7,6 +7,8 @@ import com.haiilo.kata.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,7 +33,7 @@ public class CheckoutService {
             Item item = optionalItem.get();
 
             double itemSum;
-            if (item.getOffer() != null) {
+            if (item.getOffers().length > 0) {
                 itemSum = calculateItemSumWithOffer(item, quantity);
             } else {
                 itemSum = item.getPrice() * quantity;
@@ -41,10 +43,26 @@ public class CheckoutService {
     }
 
     private double calculateItemSumWithOffer(Item item, int quantity) {
-        Offer offer = item.getOffer();
-        int offerCount = quantity / offer.getQuantity();
-        int remainCount = quantity % offer.getQuantity();
+        Offer[] offer = item.getOffers();
 
-        return offerCount * offer.getPrice() + remainCount * item.getPrice();
+        List<Offer> applicableDescSortedOffers =
+                Arrays.stream(offer).sorted(Comparator.comparingInt(Offer::getQuantity)).filter(o -> o.getQuantity() <= quantity).toList();
+
+        double sum = 0;
+        int index = 0;
+        int remained = quantity;
+        Offer minOffer = applicableDescSortedOffers.getLast();
+
+        while(remained >= minOffer.getQuantity() && index < applicableDescSortedOffers.size()) {
+            Offer currentOffer = applicableDescSortedOffers.get(index);
+            int offerCount = quantity / currentOffer.getQuantity();
+            sum += offerCount * currentOffer.getPrice();
+            remained -= offerCount;
+            index++;
+        }
+
+        sum += remained * item.getPrice();
+
+        return sum;
     }
 }
